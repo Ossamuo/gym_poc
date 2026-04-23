@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/MicroServices/">
+    <Project Path="src/Gym.BookingMessage.Producer/Gym.BookingMessage.Producer.csproj" Id="ec8c53f4-e54d-4fa9-afad-55021c2fd612" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Test/Gym.Domain.Test/Gym.Domain.Test.csproj" />
+  </Folder>
+  <Project Path="src/Gym.Api/Gym.Api.csproj" />
+  <Project Path="src/Gym.Application/Gym.Application.csproj" />
+  <Project Path="src/Gym.Domain/Gym.Domain.csproj" />
+  <Project Path="src/Gym.Infrastructure/Gym.Infrastructure.csproj" />
+  <Project Path="src/Gym.Web/Gym.Web.csproj" />
+</Solution>

@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Gym.Domain.Contexts.ActivitiesContext.UseCases.List.Response>
+
+@{
+    ViewData["Title"] = "Book your next Activity!";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>@ViewData["Title"]</h2>
+           
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <span class="alert alert-danger">@TempData["ErrorMessage"]</span>
+        }
+        @if (TempData["Message"] != null)
+        {
+            <span class="alert alert-success">@TempData["Message"]</span>
+                        
+        }
+        <span class="badge bg-primary">@Model.Count() Itens</span>    
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="@($"{TempData["BaseUrl"]}/{item.Id}.png")" class="card-img-top" alt="@item.Name"
+                         style="height: 200px; object-fit: cover; background-color: #f8f9fa;">
+                    
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">@item.Name</h5>
+                        <p class="card-text text-muted" style="font-size: 0.9rem;">
+                            @item.Description
+                        </p>
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Start At:</small>
+                            <span class="fw-bold">@item.StartAt</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <small class="text-muted">End At:</small>
+                            <span class="fw-bold">@item.EndAt</span>
+                        </li>
+                    </ul>
+
+                    <div class="card-footer bg-transparent border-top-0 pb-3">
+                        @switch (item.Status)
+                        {
+                            case Gym.Domain.Contexts.ActivitiesContext.ValueObjects.EBookingStatus.Requested:
+                                <div class="d-grid gap-2">
+                                    <button type="submit" disabled="disabled" class="btn btn-warning">
+                                        Requested
+                                    </button>
+                                </div>
+                                break;
+                            case Gym.Domain.Contexts.ActivitiesContext.ValueObjects.EBookingStatus.Sent:
+                                <div class="d-grid gap-2">
+                                    <button type="submit" disabled="disabled" class="btn btn-secondary">
+                                        Sent
+                                    </button>
+                                </div>
+                                break;
+                            case Gym.Domain.Contexts.ActivitiesContext.ValueObjects.EBookingStatus.Approved:
+                                <div class="d-grid gap-2">
+                                    <button type="submit" disabled="disabled" class="btn btn-success">
+                                        Approved
+                                    </button>
+                                </div>
+                                break;
+                            case Gym.Domain.Contexts.ActivitiesContext.ValueObjects.EBookingStatus.Rejected:
+                                <div class="d-grid gap-2">
+                                    <button type="submit" disabled="disabled" class="btn btn-danger">
+                                        Rejected
+                                    </button>
+                                </div>
+                                break;
+                            default:
+                                <form asp-controller="ActivityBooking"
+                                      asp-action="Book"
+                                      method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="activityId" value="@item.Id" />
+                                    <input type="hidden" name="partnerId" value="@item.PartnerId" />
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-outline-primary">
+                                            Book Session
+                                        </button>
+                                    </div>
+                                </form>
+                                break;
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info mt-5 text-center">
+        Nenhuma atividade encontrada no momento.
+    </div>
+}

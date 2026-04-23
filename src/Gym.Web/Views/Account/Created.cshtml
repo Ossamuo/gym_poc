@@ -1,0 +1,12 @@
+﻿@model Gym.Domain.Contexts.AccountContext.UseCases.Create.Response
+
+
+<h1>Cadastration Completed</h1>
+<br />
+<h2>We sent you  a verification Code for your @Model.Email.</h2>
+<h2>Please check you email to validate your account.</h2>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
