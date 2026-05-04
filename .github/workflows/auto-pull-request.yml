@@ -1,0 +1,38 @@
+name: Auto Create Pull Request
+
+on:
+  push:
+    branches:
+      - "feature/**"
+
+jobs:
+  create-pull-request:
+    name: Open PR to main
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          TITLE=$(echo "${BRANCH#feature/}" | tr '_-' '  ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
+
+          EXISTING=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            echo "PR already exists: #$EXISTING"
+            exit 0
+          fi
+
+          gh pr create \
+            --title "feat: $TITLE" \
+            --body "## Summary"$'\n'"Auto-generated PR from branch \`$BRANCH\`." \
+            --base main \
+            --head "$BRANCH"
+            
